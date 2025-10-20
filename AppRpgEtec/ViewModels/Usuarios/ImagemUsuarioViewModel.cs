@@ -23,10 +23,15 @@ namespace AppRpgEtec.ViewModels.Usuarios
 
             FotografarCommand = new Command(Fotografar);
             SalvarImagemCommand = new Command(SalvarImagem);
+            AbrirGaleriaCommand = new Command(AbrirGaleria);
+
+            CarregarUsuarioAzure();
         }
 
         public ICommand FotografarCommand { get;}
         public ICommand SalvarImagemCommand { get;}
+        public ICommand AbrirGaleriaCommand { get;}
+        
 
         private ImageSource fonteimagem;
 
@@ -109,6 +114,63 @@ namespace AppRpgEtec.ViewModels.Usuarios
             {
                 await Application.Current.MainPage.DisplayAlert("Ops", ex.Message + " Detalhes " + ex.InnerException, "OK");
             }
-        } 
+        }
+
+        public async void AbrirGaleria()
+        {
+            try
+            {
+                if (MediaPicker.Default.IsCaptureSupported)
+                {
+                    FileResult photo = await MediaPicker.Default.PickPhotoAsync();
+                    if (photo != null)
+                    {
+                        using (Stream sourseStream = await photo.OpenReadAsync())
+                        {
+                            using (MemoryStream ms = new MemoryStream())
+                            {
+                                await sourseStream.CopyToAsync(ms);
+                                Foto = ms.ToArray();
+                                fonteImagem = ImageSource.FromStream(() => new MemoryStream(ms.ToArray()));
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ops", ex.Message + " Detalhes " + ex.InnerException, "OK");
+            }
+        }
+
+        public async void CarregarUsuarioAzure()
+        {
+            try
+            {
+                int usuarioId = Preferences.Get("UsuarioId", 0);
+                string fileName = $"{usuarioId}.jpg";
+                var blobClient = new BlobClient(conexaoAzureStorage, container, fileName);
+
+                if (blobClient.Exists())
+                {
+                    Byte[] fileBytes;
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        blobClient.OpenRead().CopyTo(ms);
+                        fileBytes = ms.ToArray();
+                    }
+                    Foto = fileBytes;
+                }
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ops", ex.Message + " Detalhes: " + ex.InnerException, "Ok");
+
+            }
+        }
+
+
     }
 }

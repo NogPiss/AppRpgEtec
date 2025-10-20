@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="AppRpgEtec.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:conv="clr-namespace:AppRpgEtec.Converters"
     xmlns:local="clr-namespace:AppRpgEtec.Views"
     xmlns:viewsPersonagens="clr-namespace:AppRpgEtec.Views.Personagens"
     xmlns:viewsUsuarios="clr-namespace:AppRpgEtec.Views.Usuarios"
@@ -10,7 +10,13 @@
     
     Title="AppRpgEtec">
 
-    <Shell.FlyoutHeaderTemplate>
+    <Shell.Resources>
+        <ResourceDictionary>
+            <AceleratorTypeConverter:ByteArrayToImageConverter x:Key="ByteArrayToImage"/>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+            <Shell.FlyoutHeaderTemplate>
         <DataTemplate>
             <Grid>
                 <Grid.RowDefinitions>
@@ -21,7 +27,7 @@
                 <FlexLayout Grid.Row="0" Direction="Row" AlignItems="Center" >
                     <Frame Padding="0" CornerRadius="40"
                             HeightRequest="80" WidthRequest="80" >
-                        <Image/>
+                        <Image Source="{Binding Foto, Converter={StaticResource ByteArrayToImage}}"/>
                     </Frame>
                     <VerticalStackLayout Padding="10,0,0,0" Spacing="0">
                         <Label Text="App RPG Etec" FontAttributes="Bold" FontSize="Medium" />
@@ -53,7 +59,7 @@
                     ContentTemplate="{DataTemplate viewsDisputas:ListagemView}" />
 
         <Tab Title="Info" Route="info" Icon="info.png">
-            <ShellContent Title="Usuário" Route="usuario" ContentTemplate="{DataTemplate viewsUsuarios:ImagemUsurioView}">
+            <ShellContent Title="Usuário" Route="usuario" ContentTemplate="{DataTemplate viewsUsuarios:ImagemUsurioView}"/>
             <ShellContent Title="Sobre" Route="sobre" ContentTemplate="{DataTemplate local:AboutView}"/>
             <ShellContent Title="Descrição" Route="desc" ContentTemplate="{DataTemplate local:DescriptionView}"/>
         </Tab>

@@ -1,3 +1,4 @@
+using AppRpgEtec.Models;
 using AppRpgEtec.ViewModels.Personagens;
 
 namespace AppRpgEtec.Views.Personagens;
@@ -19,4 +20,6 @@ public partial class ListagemView : ContentPage
         base.OnAppearing();
         _ = viewModel.ObterPersonagens();
     }
+
+    
 }

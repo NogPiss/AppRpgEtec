@@ -17,6 +17,12 @@ namespace AppRpgEtec.ViewModels.Personagens
         private PersonagemService pService;
         public ICommand SalvarCommand { get; }
         public ICommand CancelarCommand { get; set; }
+        public bool CadastroHabilitado {
+            get {
+
+                return (PontosVida > 0);
+            } 
+        }
         
 
         public CadastroPersonagemViewModel()
@@ -25,8 +31,16 @@ namespace AppRpgEtec.ViewModels.Personagens
             pService = new PersonagemService(token);
 
             _ = ObterClasses();
-            SalvarCommand = new Command(async () => { await SalvarPersonagem(); });
+            SalvarCommand = new Command(async () => { await SalvarPersonagem(); }, () => ValidarCampos());
             CancelarCommand = new Command(async => CancelarCadastro());
+        }
+
+        public bool ValidarCampos()
+        {
+            return !string.IsNullOrEmpty(Nome)
+            && CadastroHabilitado
+            && Forca != 0
+            && Defesa != 0;
         }
 
         private async void CancelarCadastro()
@@ -61,6 +75,7 @@ namespace AppRpgEtec.ViewModels.Personagens
             {
                 nome = value;
                 OnPropertyChanged(nameof(Nome));
+                ((Command)SalvarCommand).ChangeCanExecute();
             }
         }
 
@@ -71,6 +86,7 @@ namespace AppRpgEtec.ViewModels.Personagens
             {
                 pontosVida = value;
                 OnPropertyChanged(nameof(PontosVida));
+                OnPropertyChanged(nameof(CadastroHabilitado));
             }
         }
 

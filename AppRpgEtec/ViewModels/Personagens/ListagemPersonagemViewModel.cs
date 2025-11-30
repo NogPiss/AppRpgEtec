@@ -23,7 +23,7 @@ namespace AppRpgEtec.ViewModels.Personagens
             _ = ObterPersonagens();
             NovoPersonagemCommand = new Command(async () => { await ExibirCadastroPersonagem(); });
             RemoverPersonagemCommand = new Command<Personagem>(async (Personagem p) => { await RemoverPersonagem(p); });
-            ZerarRankingRestaurarVidasGeralCommand = new Command(async () => { await ZerarRankingResturarVidasGeral(); })
+            ZerarRankingRestaurarVidasGeralCommand = new Command(async () => { await ZerarRankingResturarVidasGeral(); });
         }
         public ICommand NovoPersonagemCommand { get; }
         public ICommand RemoverPersonagemCommand { get; }
@@ -68,7 +68,7 @@ namespace AppRpgEtec.ViewModels.Personagens
                 {
                     personagemSelecionado = value;
 
-                    _ = ExibirOpcoesasync(personagemSelecionado);
+                    _ = ExibirOpcoesAsync(personagemSelecionado);
                 }
             }
         }
@@ -115,6 +115,7 @@ namespace AppRpgEtec.ViewModels.Personagens
                     .DisplayAlert("Ops", ex.Message + " Detalhes: " + ex.InnerException, "Ok");
             }
         }
+
 
         public async Task ExecutarRestaurarPontosPersonagem(Personagem p)
         {

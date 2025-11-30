@@ -30,6 +30,7 @@ namespace AppRpgEtec.Models
             string urlComplementar = "/Habilidade";
             return await _request.PostAsync(_apiUrlBase + urlComplementar, d, _token);
         }
+
 public async Task<Disputa> PostDisputaGeralAsync(Disputa d)
         {
             string urlComplementar = "/DisputaEmGrupo";
@@ -38,4 +39,6 @@ public async Task<Disputa> PostDisputaGeralAsync(Disputa d)
 
 
     }
+
+
 }
